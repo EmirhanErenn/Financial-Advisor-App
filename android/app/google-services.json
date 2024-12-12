@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "33703602688",
+    "project_id": "financialadvisorapp-4e1e0",
+    "storage_bucket": "financialadvisorapp-4e1e0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:33703602688:android:f98d8dc3b50a142c99c6e5",
+        "android_client_info": {
+          "package_name": "com.example.financial_advisor_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHq80fRgcsudEE0sVQPzSlPShkwxZRz14"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
