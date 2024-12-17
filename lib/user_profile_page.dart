@@ -1,117 +1,72 @@
 import 'package:flutter/material.dart';
-//update
 
 class UserProfilePage extends StatelessWidget {
   const UserProfilePage({Key? key}) : super(key: key);
 
   // Profil Fotoğrafı (CircleAvatar) için metot
   Widget buildProfileImage() {
-    return const CircleAvatar(
-      radius: 50,
-      backgroundImage: AssetImage('lib/assets/images/default_profile.png'),
-    );
-  }
-
-  // 'Ad Soyad' TextField için metot
-  Widget buildNameField() {
-    return TextField(
-      decoration: InputDecoration(
-        labelText: 'Ad Soyad',
-        filled: true,
-        fillColor: const Color(0xFFF1F1F1),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.0),
-          borderSide: BorderSide.none,
-        ),
-      ),
-    );
-  }
-
-  // 'E-Posta' TextField için metot
-  Widget buildEmailField() {
-    return TextField(
-      decoration: InputDecoration(
-        labelText: 'E-Posta',
-        filled: true,
-        fillColor: const Color(0xFFF1F1F1),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.0),
-          borderSide: BorderSide.none,
-        ),
-      ),
-    );
-  }
-
-  // Kaydet Butonu için metot
-  Widget buildSaveButton() {
-    return ElevatedButton(
-      onPressed: () {
-        // Profili kaydetme işlemleri buraya gelecek
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF003366),
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 50),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-      ),
-      child: const Text(
-        'Kaydet',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 18,
-        ),
-      ),
-    );
-  }
-
-  // Sayfa içeriğini döndüren metot
-  Widget buildPageContent(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            buildProfileImage(),
-            const SizedBox(height: 20),
-            buildNameField(),
-            const SizedBox(height: 20),
-            buildEmailField(),
-            const SizedBox(height: 20),
-            buildSaveButton(),
-          ],
-        ),
+      padding: const EdgeInsets.only(top: 10.0), // Fotoğraf AppBar'a yakın
+      child: const CircleAvatar(
+        radius: 50,
+        backgroundImage: AssetImage('lib/assets/images/default_profile.png'),
       ),
     );
   }
 
-  // BottomAppBar'ı döndüren metot
-  Widget buildBottomNavigationBar(BuildContext context) {
-    return BottomAppBar(
-      color: const Color(0xFFF1F1F1),
+  // Bilgi satırı için widgeta
+  Widget buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          IconButton(
-            icon: const Icon(Icons.home, color: Color(0xFF303030), size: 30),
-            onPressed: () {
-              Navigator.pushNamed(context, '/user_home');
-            },
+          Text(
+            '$label: ',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18, // Yazı tipi büyütüldü
+              color: Colors.black87,
+            ),
           ),
-          IconButton(
-            icon: const Icon(Icons.payment, color: Color(0xFF303030), size: 30),
-            onPressed: () {
-              Navigator.pushNamed(context, '/user_payment');
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.person, color: Color(0xFF303030), size: 30),
-            onPressed: () {
-              Navigator.pushNamed(context, '/user_profile');
-            },
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 18, // Yazı tipi büyütüldü
+                color: Colors.black54,
+              ),
+            ),
           ),
         ],
+      ),
+    );
+  }
+
+  // Güncelle Butonu
+  Widget buildUpdateButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20.0),
+      child: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/user_profile_update'); // Güncelleme sayfasına yönlendirme
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF003366),
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 50),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+          ),
+          child: const Text(
+            'Güncelle',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -122,33 +77,69 @@ class UserProfilePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xFF003366),
         title: const Text(
-          'Taner Eren Mobile App',
+          'Kullanıcı Profili',
           style: TextStyle(
-            fontFamily: 'Poppins',
             fontSize: 24,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
         ),
-        leading: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: ClipOval(
-                child: Image.asset(
-                  'lib/assets/images/malii.png',
-                  width: 50,
-                  height: 50,
-                  fit: BoxFit.cover,
-                ),
+      ),
+      body: Column(
+        children: [
+          const SizedBox(height: 30),
+          buildProfileImage(), // Profil fotoğrafı
+          const SizedBox(height: 20), // Fotoğraf ile bilgiler arasında boşluk
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  buildInfoRow('Ad Soyad', 'Taner Eren'), // Örnek veri
+                  const SizedBox(height: 20), // Bilgiler arası boşluk
+                  buildInfoRow('E-Posta', 'taner.eren@example.com'), // Örnek veri
+                  const SizedBox(height: 20), // Bilgiler arası boşluk
+                  buildInfoRow('Telefon', '+90 555 123 4567'), // Örnek veri
+                  const SizedBox(height: 20), // Bilgiler arası boşluk
+                  buildInfoRow('Şirket', 'Örnek Şirket'), // Örnek veri (opsiyonel olabilir)
+                  const SizedBox(height: 10), // Bilgiler ile buton arasında boşluk
+                  // Yorum olarak ekleme:
+                  // Buradaki veriler veritabanından çekilecektir.
+                ],
               ),
+            ),
+          ),
+          buildUpdateButton(context), // Güncelle butonu BottomBar'ın üstünde
+          const SizedBox(height: 30),
+        ],
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: const Color(0xFFF1F1F1),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.home, color: Color(0xFF303030), size: 30),
+              onPressed: () {
+                Navigator.pushNamed(context, '/user_home');
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.payment, color: Color(0xFF303030), size: 30),
+              onPressed: () {
+                Navigator.pushNamed(context, '/user_payment');
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.person, color: Color(0xFF303030), size: 30),
+              onPressed: () {
+                Navigator.pushNamed(context, '/user_profile');
+              },
             ),
           ],
         ),
-        toolbarHeight: 60,
       ),
-      body: buildPageContent(context), // Sayfa içeriği metodu
-      bottomNavigationBar: buildBottomNavigationBar(context), // BottomAppBar metodu
     );
   }
 }
