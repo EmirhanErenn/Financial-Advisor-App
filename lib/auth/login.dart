@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 //update
 
 class Login_Page extends StatefulWidget {
@@ -9,9 +10,11 @@ class Login_Page extends StatefulWidget {
 }
 
 class _Login_PageState extends State<Login_Page> {
-
-  late String email,password;
+  late String email, password;
   final formKey = GlobalKey<FormState>();
+  final firebaseAuth = FirebaseAuth.instance;
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,15 +30,9 @@ class _Login_PageState extends State<Login_Page> {
               const SizedBox(height: 20),
               passwordTextField(),
               const SizedBox(height: 20),
-              _buildElevatedButton(
-                text: 'Giriş Yap',
-                onPressed: () => Navigator.pushNamed(context, '/user_home'),
-              ),
+              loginButton(),
               const SizedBox(height: 20),
-              _buildElevatedButton(
-                text: 'Admin Sayfası',
-                onPressed: () => Navigator.pushNamed(context, '/admin_home'),
-              ),
+              adminLoginButton(),
             ],
           ),
         ),
@@ -70,6 +67,7 @@ class _Login_PageState extends State<Login_Page> {
       toolbarHeight: 60,
     );
   }
+
   TextFormField passwordTextField() {
     return TextFormField(
       validator: (value)
@@ -86,7 +84,7 @@ class _Login_PageState extends State<Login_Page> {
         password = value!;
       },
       obscureText: true,
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(color: Colors.black),
       decoration: InputDecoration(
         hintText: "Şifreniz",
         filled: true,
@@ -113,7 +111,7 @@ class _Login_PageState extends State<Login_Page> {
       {
           email = value!;
       },
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(color: Colors.black),
       decoration: InputDecoration(
         hintText: "E Posta Adresiniz",
         filled: true,
@@ -127,9 +125,26 @@ class _Login_PageState extends State<Login_Page> {
   }
 
   // ElevatedButton Metodu
-  Widget _buildElevatedButton({required String text, required VoidCallback onPressed}) {
+  Widget loginButton() {
     return ElevatedButton(
-      onPressed: onPressed,
+      onPressed: () async {
+          if(formKey.currentState!.validate())
+            {
+              formKey.currentState!.save();
+              try {
+                final userResult = await firebaseAuth.signInWithEmailAndPassword( // uzun bi islem oldugundan dolayı await ve async kullanılıyor not
+                    email: email, password: password);
+                Navigator.pushReplacementNamed(context, "/user_home");
+               // print(userResult.user!.email);
+                  }
+                  catch(e){
+                    print(e.toString());
+                  }
+            }
+          else {
+
+          }
+      },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF003366),
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
@@ -137,13 +152,36 @@ class _Login_PageState extends State<Login_Page> {
           borderRadius: BorderRadius.circular(8.0),
         ),
       ),
-      child: Text(
-        text,
-        style: const TextStyle(
+      child: const Text(
+        'Giriş Yap',
+        style: TextStyle(
           color: Colors.white,
           fontSize: 18,
         ),
       ),
     );
   }
+
+  Widget adminLoginButton() {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.pushReplacementNamed(context, "/admin_home");
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFF003366),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+      ),
+      child: const Text(
+        'Admin Giriş',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+        ),
+      ),
+    );
+  }
+
 }
