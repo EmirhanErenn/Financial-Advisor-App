@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:financial_advisor_app/service/auth_service.dart';
+
 //update
 class Admin_User_Add_Page extends StatefulWidget {
   const Admin_User_Add_Page({Key? key}) : super(key: key);
@@ -9,15 +11,19 @@ class Admin_User_Add_Page extends StatefulWidget {
 }
 
 class _Admin_User_Add_PageState extends State<Admin_User_Add_Page> {
-  late String email,password;
+  late String email, password;
   final formKey = GlobalKey<FormState>();
   final firebaseAuth = FirebaseAuth.instance;
+  final authService = AuthService(); // AUTH SERVICE SAYFASINDAN GELEN CLASS!!
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true, // Klavye açıldığında ekranı otomatik olarak küçültür
+      resizeToAvoidBottomInset:
+          true, // Klavye açıldığında ekranı otomatik olarak küçültür
       appBar: buildAppBar(),
-      body: SingleChildScrollView( // Sayfanın kaydırılabilir olmasını sağlar
+      body: SingleChildScrollView(
+        // Sayfanın kaydırılabilir olmasını sağlar
         child: buildBody(context),
       ),
       bottomNavigationBar: _buildBottomNavBar(context),
@@ -63,7 +69,7 @@ class _Admin_User_Add_PageState extends State<Admin_User_Add_Page> {
             key: formKey,
             child: Column(
               children: [
-            buildTitleText(),
+                buildTitleText(),
                 const SizedBox(height: 15),
                 emailTextField(),
                 const SizedBox(height: 15),
@@ -93,17 +99,12 @@ class _Admin_User_Add_PageState extends State<Admin_User_Add_Page> {
 
   TextFormField passwordTextField() {
     return TextFormField(
-      validator: (value)
-      {
-        if(value!.isEmpty)
-        {
+      validator: (value) {
+        if (value!.isEmpty) {
           return "Bilgileri Eksiksiz Doldurunuz";
-        }
-        else
-        {}
+        } else {}
       },
-      onSaved: (value)
-      {
+      onSaved: (value) {
         password = value!;
       },
       obscureText: true,
@@ -123,15 +124,11 @@ class _Admin_User_Add_PageState extends State<Admin_User_Add_Page> {
   TextFormField emailTextField() {
     return TextFormField(
       validator: (value) {
-        if (value!.isEmpty)
-        {
+        if (value!.isEmpty) {
           return "Bilgileri Eksiksiz Doldurunuz";
-        }
-        else
-        {}
+        } else {}
       },
-      onSaved: (value)
-      {
+      onSaved: (value) {
         email = value!;
       },
       style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -151,24 +148,32 @@ class _Admin_User_Add_PageState extends State<Admin_User_Add_Page> {
   Widget buildElevatedButton(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-          if(formKey.currentState!.validate())
-            {
-              formKey.currentState!.save();
-              try {
-                var userResult
-                = await firebaseAuth.createUserWithEmailAndPassword(
-                    email: email, password: password);
-                formKey.currentState!.reset();
-                ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                        content: Text("Kayıt Başarıyla Gerçekleşti")));
-                Navigator.pushReplacementNamed(context, "/admin_home");
-              } catch(e) {
-                  print(e.toString());
-              }
-            }
-          else
-            {}
+        if (formKey.currentState!.validate()) {
+          formKey.currentState!.save();
+          final result = await authService.signUp(email, password);
+          if (result == "success") {
+            formKey.currentState!.reset();
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Kayıt Başarıyla Gerçekleşti")));
+            Navigator.pushReplacementNamed(context, "/admin_home");
+          } else {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Hata'),
+                    content: Text(result!), // HATA KONTROLLERI AYARLANACAK
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(
+                            context), // navigator pop mevcut ekrandan bir önceki ekrana geri dönmek icin kullanılır
+                        child: const Text('Geri Dön'),
+                      ),
+                    ],
+                  );
+                });
+          }
+        }
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF003366),
@@ -215,7 +220,8 @@ class _Admin_User_Add_PageState extends State<Admin_User_Add_Page> {
   }
 
   // Bottom Navigation Bar Icon
-  Widget _buildNavIcon({required IconData icon, required VoidCallback onPressed}) {
+  Widget _buildNavIcon(
+      {required IconData icon, required VoidCallback onPressed}) {
     return IconButton(
       icon: Icon(icon, color: const Color(0xFF303030), size: 30),
       onPressed: onPressed,

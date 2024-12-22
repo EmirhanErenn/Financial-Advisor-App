@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:financial_advisor_app/service/auth_service.dart';
+
 //update
 
 class Login_Page extends StatefulWidget {
@@ -13,6 +15,7 @@ class _Login_PageState extends State<Login_Page> {
   late String email, password;
   final formKey = GlobalKey<FormState>();
   final firebaseAuth = FirebaseAuth.instance;
+  final authService = AuthService();
 
 
   @override
@@ -21,23 +24,52 @@ class _Login_PageState extends State<Login_Page> {
       appBar: _buildAppBar(),
       body: Form(
         key: formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              emailTextField(),
-              const SizedBox(height: 20),
-              passwordTextField(),
-              const SizedBox(height: 20),
-              loginButton(),
-              const SizedBox(height: 20),
-              adminLoginButton(),
-            ],
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    emailTextField(),
+                    const SizedBox(height: 20),
+                    passwordTextField(),
+                    const SizedBox(height: 20),
+                    loginButton(),
+                    const SizedBox(height: 20),
+                    adminLoginButton(),
+                  ],
+                ),
+              ),
+            ),
+
+            const Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  '© 2024 Badi Powered By Bekersoftware',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
         ),
       ),
     );
+
+
+
+
+
   }
 
   // AppBar Metodu
@@ -131,19 +163,30 @@ class _Login_PageState extends State<Login_Page> {
           if(formKey.currentState!.validate())
             {
               formKey.currentState!.save();
-              try {
-                final userResult = await firebaseAuth.signInWithEmailAndPassword( // uzun bi islem oldugundan dolayı await ve async kullanılıyor not
-                    email: email, password: password);
-                Navigator.pushReplacementNamed(context, "/user_home");
-               // print(userResult.user!.email);
-                  }
-                  catch(e){
-                    print(e.toString());
-                  }
+              final result = await authService.signIn(email, password);
+              if(result == "success")
+                {
+                  Navigator.pushReplacementNamed(context, "/user_home");
+                }
+              else
+                {
+                  showDialog(context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('Hata'),
+                          content: Text(result!),
+                          actions: [
+                            TextButton(
+                                onPressed: () => Navigator.pop(
+                                  context
+                                ),
+                                child: const Text('Geri Dön'),),
+                          ],
+                        );
+                      }
+                  );
+                }
             }
-          else {
-
-          }
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF003366),
@@ -165,7 +208,7 @@ class _Login_PageState extends State<Login_Page> {
   Widget adminLoginButton() {
     return ElevatedButton(
       onPressed: () {
-        Navigator.pushReplacementNamed(context, "/admin_home");
+        Navigator.pushReplacementNamed(context, "/admin_login_page");
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF003366),

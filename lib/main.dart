@@ -1,9 +1,10 @@
-import 'package:financial_advisor_app/admin_add_user_page.dart';
+import 'package:financial_advisor_app/auth/admin_add_user_page.dart';
+import 'package:financial_advisor_app/auth/admin_login.dart';
 import 'package:financial_advisor_app/update_password.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'login.dart';
+import 'auth/login.dart';
 import 'user_home_page.dart';
 import 'admin_home_page.dart';
 import 'user_payment_page.dart';
@@ -44,9 +45,10 @@ class _FinanceAppState extends State<FinanceApp> {
         '/admin_home': (context) => const AdminHomePage(),
         '/user_payment': (context) => const UserPaymentPage(),
         '/user_profile': (context) => const UserProfilePage(),
-        '/admin_add_user': (context) => const Admin_User_Add_Page(),
+        '/customer_management': (context) => const Admin_User_Add_Page(),
         '/update_password': (context) => const UpdatePasswordPage(),
         '/user_profile_update': (context) => const UserProfileUpdatePage(),
+        '/admin_login_page': (context) => const Admin_Login_Page(),
       },
     );
   }
