@@ -11,8 +11,13 @@ import 'user_payment_page.dart';
 import 'user_profile_page.dart';
 import 'user_profile_update.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'customer_management.dart';
 
+<<<<<<< HEAD
 //code
+=======
+//updateee
+>>>>>>> 97498f8 (VersionUpdateEx)
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -45,7 +50,7 @@ class _FinanceAppState extends State<FinanceApp> {
         '/admin_home': (context) => const AdminHomePage(),
         '/user_payment': (context) => const UserPaymentPage(),
         '/user_profile': (context) => const UserProfilePage(),
-        '/customer_management': (context) => const Admin_User_Add_Page(),
+        '/customer_management': (context) => const CustomerManagement(),
         '/update_password': (context) => const UpdatePasswordPage(),
         '/user_profile_update': (context) => const UserProfileUpdatePage(),
         '/admin_login_page': (context) => const Admin_Login_Page(),

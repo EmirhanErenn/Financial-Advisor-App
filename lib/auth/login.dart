@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:financial_advisor_app/service/auth_service.dart';
 
+<<<<<<< HEAD
 //code
+=======
+>>>>>>> 97498f8 (VersionUpdateEx)
 class Login_Page extends StatefulWidget {
   const Login_Page({Key? key}) : super(key: key);
 
@@ -15,7 +18,6 @@ class _Login_PageState extends State<Login_Page> {
   final formKey = GlobalKey<FormState>();
   final firebaseAuth = FirebaseAuth.instance;
   final authService = AuthService();
-
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +34,17 @@ class _Login_PageState extends State<Login_Page> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Center(
+                      child: SizedBox(
+                        width: 120,
+                        height: 120,
+                        child: Image.asset(
+                          'lib/assets/images/malii.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 30),
                     emailTextField(),
                     const SizedBox(height: 20),
                     passwordTextField(),
@@ -43,11 +56,10 @@ class _Login_PageState extends State<Login_Page> {
                 ),
               ),
             ),
-
             const Align(
               alignment: Alignment.center,
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16.0),
                 child: Text(
                   '© 2024 Powered By Bekersoftware',
                   style: TextStyle(
@@ -64,11 +76,6 @@ class _Login_PageState extends State<Login_Page> {
         ),
       ),
     );
-
-
-
-
-
   }
 
   // AppBar Metodu
@@ -101,27 +108,23 @@ class _Login_PageState extends State<Login_Page> {
 
   TextFormField passwordTextField() {
     return TextFormField(
-      validator: (value)
-      {
-        if(value!.isEmpty)
-          {
-            return "Lütfen Bilgileri Eksiksiz Doldurunuz";
-          }
-        else
-          {}
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "Lütfen Bilgileri Eksiksiz Doldurunuz";
+        }
+        return null;
       },
-      onSaved: (value)
-      {
+      onSaved: (value) {
         password = value!;
       },
       obscureText: true,
-      style: TextStyle(color: Colors.black),
+      style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
         hintText: "Şifreniz",
         filled: true,
         fillColor: const Color(0xFFF1F1F1),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(16.0), // Köşe Yuvarlama
           borderSide: BorderSide.none,
         ),
       ),
@@ -131,67 +134,58 @@ class _Login_PageState extends State<Login_Page> {
   TextFormField emailTextField() {
     return TextFormField(
       validator: (value) {
-        if (value!.isEmpty)
-          {
-            return "Bilgileri Eksiksiz Doldurunuz";
-          }
-        else
-          {}
+        if (value!.isEmpty) {
+          return "Bilgileri Eksiksiz Doldurunuz";
+        }
+        return null;
       },
-      onSaved: (value)
-      {
-          email = value!;
+      onSaved: (value) {
+        email = value!;
       },
-      style: TextStyle(color: Colors.black),
+      style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
         hintText: "E Posta Adresiniz",
         filled: true,
         fillColor: const Color(0xFFF1F1F1),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(16.0), // Köşe Yuvarlama
           borderSide: BorderSide.none,
         ),
       ),
     );
   }
 
-  // ElevatedButton Metodu
   Widget loginButton() {
     return ElevatedButton(
       onPressed: () async {
-          if(formKey.currentState!.validate())
-            {
-              formKey.currentState!.save();
-              final result = await authService.signIn(email, password);
-              if(result == "success")
-                {
-                  Navigator.pushReplacementNamed(context, "/user_home");
-                }
-              else
-                {
-                  showDialog(context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('Hata'),
-                          content: Text(result!),
-                          actions: [
-                            TextButton(
-                                onPressed: () => Navigator.pop(
-                                  context
-                                ),
-                                child: const Text('Geri Dön'),),
-                          ],
-                        );
-                      }
+        if (formKey.currentState!.validate()) {
+          formKey.currentState!.save();
+          final result = await authService.signIn(email, password);
+          if (result == "success") {
+            Navigator.pushReplacementNamed(context, "/user_home");
+          } else {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Hata'),
+                    content: Text(result!),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Geri Dön'),
+                      ),
+                    ],
                   );
-                }
-            }
+                });
+          }
+        }
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF003366),
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(16.0), // Köşe Yuvarlama
         ),
       ),
       child: const Text(
@@ -213,7 +207,7 @@ class _Login_PageState extends State<Login_Page> {
         backgroundColor: const Color(0xFF003366),
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(16.0), // Köşe Yuvarlama
         ),
       ),
       child: const Text(
@@ -225,5 +219,4 @@ class _Login_PageState extends State<Login_Page> {
       ),
     );
   }
-
 }

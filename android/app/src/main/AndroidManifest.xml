@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="financial_advisor_app"
+        android:label="Taner Eren Mobile App"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
