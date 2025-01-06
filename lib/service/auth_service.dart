@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+//code
 class AuthService {
   final firebaseAuth = FirebaseAuth.instance;
   final firebasecloud = FirebaseFirestore.instance;
@@ -17,15 +17,37 @@ class AuthService {
   }
 
   //SIGNUP (ADMIN KULLANICI EKLEME ISLEMI)
-  Future<String?> signUp(String email, String password) async {
+  Future<String?> signUp(String email, String password, String name, String surname, String phoneNumber) async {
     String? res;
     try {
       var result = await firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
+      try{
+        final resultData = await firebasecloud.collection("Users").add({
+          'name': name,
+          'surname': surname,
+          'phoneNumber': phoneNumber,
+          'email': email
+        });
+      } catch (e) {
+        print("$e");
+      }
       res = "success";
-    } catch(e) {
-      //hata yakalama yapılacak
-      // return res;
+    }on FirebaseAuthException catch(e) {
+      switch(e.code)
+      {
+        case "email-already-in-use":
+          res = "Mail zaten Kayıtlı";
+          break;
+        case "ERROR_INVALID_EMAIL":
+        case "invalid-email":
+          res = "Geçersiz Mail";
+          break;
+        default:
+          res = "Bir hata ile karşılaşıldı, Lütfen birazdan tekrar deneyiniz";
+          break;
+      }
+       return res;
     }
     return res;
   }

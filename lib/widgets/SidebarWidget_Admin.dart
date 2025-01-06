@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+//code
 class SidebarWidget extends StatefulWidget {
   final bool isOpen;
   final VoidCallback onClose;

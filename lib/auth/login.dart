@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:financial_advisor_app/service/auth_service.dart';
 
-//update
-
+//code
 class Login_Page extends StatefulWidget {
   const Login_Page({Key? key}) : super(key: key);
 

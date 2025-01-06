@@ -12,7 +12,7 @@ import 'user_profile_page.dart';
 import 'user_profile_update.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-//updatee
+//code
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(

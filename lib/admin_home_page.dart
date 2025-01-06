@@ -1,6 +1,6 @@
 import 'package:financial_advisor_app/widgets/SidebarWidget_Admin.dart';
 import 'package:flutter/material.dart';
-
+//code
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({Key? key}) : super(key: key);
 

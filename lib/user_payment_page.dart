@@ -1,7 +1,6 @@
 import 'package:financial_advisor_app/widgets/SidebarWidget_User.dart';
 import 'package:flutter/material.dart';
-//update
-
+//code
 class UserPaymentPage extends StatefulWidget {
   const UserPaymentPage({Key? key}) : super(key: key);
 

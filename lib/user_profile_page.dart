@@ -1,6 +1,6 @@
 import 'package:financial_advisor_app/widgets/SidebarWidget_User.dart';
 import 'package:flutter/material.dart';
-
+//code
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({Key? key}) : super(key: key);
 

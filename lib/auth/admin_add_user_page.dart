@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:financial_advisor_app/service/auth_service.dart';
 import 'package:financial_advisor_app/widgets/SidebarWidget_Admin.dart';
-
+//code
 class Admin_User_Add_Page extends StatefulWidget {
   const Admin_User_Add_Page({Key? key}) : super(key: key);
 
@@ -11,7 +11,7 @@ class Admin_User_Add_Page extends StatefulWidget {
 }
 
 class _Admin_User_Add_PageState extends State<Admin_User_Add_Page> {
-  late String email, password;
+  late String email, password, phoneNumber, name, surname;
   final formKey = GlobalKey<FormState>();
   final firebaseAuth = FirebaseAuth.instance;
   final authService = AuthService();
@@ -85,6 +85,12 @@ class _Admin_User_Add_PageState extends State<Admin_User_Add_Page> {
               children: [
                 buildTitleText(),
                 const SizedBox(height: 15),
+                nameTextField(),
+                const SizedBox(height: 15),
+                surnameTextField(),
+                const SizedBox(height: 15),
+                phoneNumberTextField(),
+                const SizedBox(height: 15),
                 emailTextField(),
                 const SizedBox(height: 15),
                 passwordTextField(),
@@ -133,6 +139,78 @@ class _Admin_User_Add_PageState extends State<Admin_User_Add_Page> {
     );
   }
 
+  TextFormField phoneNumberTextField() {
+    return TextFormField(
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "Bilgileri Eksiksiz Doldurunuz";
+        } else {}
+      },
+      onSaved: (value) {
+        phoneNumber = value!;
+      },
+      obscureText: false,
+      style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+      decoration: InputDecoration(
+        hintText: "Telefon Numaranız",
+        filled: true,
+        fillColor: const Color(0xFFF1F1F1),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide.none,
+        ),
+      ),
+    );
+  }
+
+  TextFormField nameTextField() {
+    return TextFormField(
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "Bilgileri Eksiksiz Doldurunuz";
+        } else {}
+      },
+      onSaved: (value) {
+        name = value!;
+      },
+      obscureText: false,
+      style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+      decoration: InputDecoration(
+        hintText: "Adınız",
+        filled: true,
+        fillColor: const Color(0xFFF1F1F1),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide.none,
+        ),
+      ),
+    );
+  }
+
+  TextFormField surnameTextField() {
+    return TextFormField(
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "Bilgileri Eksiksiz Doldurunuz";
+        } else {}
+      },
+      onSaved: (value) {
+        surname = value!;
+      },
+      obscureText: false,
+      style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+      decoration: InputDecoration(
+        hintText: "Soyadınız",
+        filled: true,
+        fillColor: const Color(0xFFF1F1F1),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide.none,
+        ),
+      ),
+    );
+  }
+
   TextFormField emailTextField() {
     return TextFormField(
       validator: (value) {
@@ -161,7 +239,7 @@ class _Admin_User_Add_PageState extends State<Admin_User_Add_Page> {
       onPressed: () async {
         if (formKey.currentState!.validate()) {
           formKey.currentState!.save();
-          final result = await authService.signUp(email, password);
+          final result = await authService.signUp(email, password, name, surname, phoneNumber);
           if (result == "success") {
             formKey.currentState!.reset();
             ScaffoldMessenger.of(context).showSnackBar(
