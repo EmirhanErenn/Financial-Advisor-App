@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class SidebarWidget extends StatelessWidget {
-  final bool isOpen; // Sidebar'ın açık olup olmadığını kontrol eden parametre
-  final VoidCallback onClose; // Sidebar'ı kapatmak için bir callback
+class SidebarWidget extends StatefulWidget {
+  final bool isOpen;
+  final VoidCallback onClose;
 
   const SidebarWidget({
     Key? key,
@@ -11,65 +11,78 @@ class SidebarWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
+  _SidebarWidgetState createState() => _SidebarWidgetState();
+}
+
+class _SidebarWidgetState extends State<SidebarWidget>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
       duration: const Duration(milliseconds: 300),
-      width: isOpen ? 250 : 0, // Sidebar'ın genişliği
-      decoration: const BoxDecoration(
-        color: Color(0xFF003366), // Sidebar arka plan rengi
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 50),
-          _buildNavItem(icon: Icons.home, label: 'Anasayfa', onTap: () {
-            Navigator.pushNamed(context, '/admin_home');
-            onClose();
-          }),
-          _buildNavItem(icon: Icons.payment, label: 'Ödemeler', onTap: () {}),
-          _buildNavItem(icon: Icons.person, label: 'Profil', onTap: () {}),
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton.icon(
-              onPressed: onClose, // Sidebar'ı kapatmak için onClose'u çağırıyoruz
-              icon: const Icon(Icons.close, color: Colors.white),
-              label: const Text(
-                "Kapat",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.redAccent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(-1.0, 0.0), // Sol taraftan başla
+      end: Offset.zero, // Görünür hale gel
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
   }
 
-  Widget _buildNavItem({
-    required IconData icon,
-    required String label,
-    required VoidCallback onTap,
-  }) {
-    return ListTile(
-      leading: Icon(icon, color: Colors.white),
-      title: Text(
-        label,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
+  @override
+  void didUpdateWidget(covariant SidebarWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isOpen) {
+      _animationController.forward(); // Açılma animasyonu
+    } else {
+      _animationController.reverse(); // Kapanma animasyonu
+    }
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SlideTransition(
+      position: _slideAnimation,
+      child: Container(
+        width: 250, // Sidebar genişliği
+        color: const Color(0xFF003366),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.close, color: Colors.white),
+              onPressed: widget.onClose,
+            ),
+            ListTile(
+              leading: const Icon(Icons.home, color: Colors.white),
+              title: const Text('Anasayfa', style: TextStyle(color: Colors.white)),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.payment_outlined, color: Colors.white),
+              title: const Text('Ödemeler', style: TextStyle(color: Colors.white)),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.person, color: Colors.white),
+              title: const Text('Profil', style: TextStyle(color: Colors.white)),
+              onTap: () {},
+            ),
+          ],
         ),
       ),
-      onTap: onTap,
     );
   }
 }

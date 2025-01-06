@@ -1,9 +1,16 @@
+import 'package:financial_advisor_app/widgets/SidebarWidget_User.dart';
 import 'package:flutter/material.dart';
 
-class UserProfilePage extends StatelessWidget {
+class UserProfilePage extends StatefulWidget {
   const UserProfilePage({Key? key}) : super(key: key);
 
-  // Profil Fotoğrafı (CircleAvatar) için metot
+  @override
+  State<UserProfilePage> createState() => _UserProfilePageState();
+}
+
+class _UserProfilePageState extends State<UserProfilePage> {
+
+  bool isSidebarOpen = false;
   Widget buildProfileImage() {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0), // Fotoğraf AppBar'a yakın
@@ -41,6 +48,12 @@ class UserProfilePage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void toggleSidebar() {
+    setState(() {
+      isSidebarOpen = !isSidebarOpen;
+    });
   }
 
   // Güncelle Butonu
@@ -110,35 +123,9 @@ class UserProfilePage extends StatelessWidget {
               ),
             ),
           ),
-          buildUpdateButton(context), // Güncelle butonu BottomBar'ın üstünde
-          const SizedBox(height: 30),
-        ],
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: const Color(0xFFF1F1F1),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.home, color: Color(0xFF303030), size: 30),
-              onPressed: () {
-                Navigator.pushNamed(context, '/user_home');
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.payment, color: Color(0xFF303030), size: 30),
-              onPressed: () {
-                Navigator.pushNamed(context, '/user_payment');
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.person, color: Color(0xFF303030), size: 30),
-              onPressed: () {
-                Navigator.pushNamed(context, '/user_profile');
-              },
-            ),
-          ],
-        ),
+          buildUpdateButton(context),
+          SidebarWidget(isOpen: isSidebarOpen, onClose: toggleSidebar)
+        ]
       ),
     );
   }

@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:financial_advisor_app/widgets/SidebarWidget_User.dart';
 
-class UserProfileUpdatePage extends StatelessWidget {
+class UserProfileUpdatePage extends StatefulWidget {
   const UserProfileUpdatePage({Key? key}) : super(key: key);
+
+  @override
+  State<UserProfileUpdatePage> createState() => _UserProfileUpdatePageState();
+}
+
+class _UserProfileUpdatePageState extends State<UserProfileUpdatePage> {
+
+  bool isSidebarOpen = false;
 
   // Profil Fotoğrafı (CircleAvatar) için metot
   Widget buildProfileImage() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10.0), // Fotoğrafı AppBar'a daha yakın yapıyoruz
-      child: const CircleAvatar(
+    return const Padding(
+      padding: EdgeInsets.only(top: 10.0), // Fotoğrafı AppBar'a daha yakın yapıyoruz
+      child: CircleAvatar(
         radius: 50,
         backgroundImage: AssetImage('lib/assets/images/default_profile.png'),
       ),
@@ -28,6 +37,12 @@ class UserProfileUpdatePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void toggleSidebar() {
+    setState(() {
+      isSidebarOpen = !isSidebarOpen;
+    });
   }
 
   // Şifremi Değiştir Butonu için metot
@@ -117,7 +132,12 @@ class UserProfileUpdatePage extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        child: buildPageContent(context),
+        child: Stack(
+          children: [
+            buildPageContent(context),
+            SidebarWidget(isOpen: isSidebarOpen, onClose: toggleSidebar)
+          ],
+        ),
       ),
       bottomNavigationBar: BottomAppBar(
         color: const Color(0xFFF1F1F1),

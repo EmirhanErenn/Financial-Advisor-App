@@ -1,9 +1,22 @@
+import 'package:financial_advisor_app/widgets/SidebarWidget_Admin.dart';
 import 'package:flutter/material.dart';
 
-class AdminHomePage extends StatelessWidget {
+class AdminHomePage extends StatefulWidget {
   const AdminHomePage({Key? key}) : super(key: key);
 
+  @override
+  State<AdminHomePage> createState() => _AdminHomePageState();
+}
+
+class _AdminHomePageState extends State<AdminHomePage> {
   // Kullanıcı Bilgisi ve Profil Resmi Burda
+  bool isSidebarOpen = false;
+
+  void toggleSidebar() {
+    setState(() {
+      isSidebarOpen = !isSidebarOpen;
+    });
+  }
   Widget _buildWelcomeSection() {
     return const Row(
       children: [
@@ -42,7 +55,8 @@ class AdminHomePage extends StatelessWidget {
   Widget _buildLogoutButton(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        Navigator.pushNamed(context, '/'); // Çıkış sonrası login sayfasına yönlendirme
+        Navigator.pushNamed(
+            context, '/'); // Çıkış sonrası login sayfasına yönlendirme
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.red,
@@ -62,7 +76,8 @@ class AdminHomePage extends StatelessWidget {
   }
 
   // İşlev Butonları
-  Widget _buildActionButton(BuildContext context, String label, IconData icon, VoidCallback onPressed) {
+  Widget _buildActionButton(BuildContext context, String label, IconData icon,
+      VoidCallback onPressed) {
     return ElevatedButton.icon(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
@@ -87,8 +102,17 @@ class AdminHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      body: _buildBody(context),
-      bottomNavigationBar: _buildBottomNavBar(context),
+      body: Stack(
+        children: [
+          _buildBody(context),
+          SidebarWidget(isOpen: isSidebarOpen, onClose: toggleSidebar)
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: toggleSidebar,
+        backgroundColor: const Color(0xFF003366),
+        child: const Icon(Icons.menu, color: Colors.white),
+      ),
     );
   }
 
@@ -107,6 +131,8 @@ class AdminHomePage extends StatelessWidget {
     );
   }
 
+
+
   // Body Metodu
   Widget _buildBody(BuildContext context) {
     return Padding(
@@ -114,8 +140,10 @@ class AdminHomePage extends StatelessWidget {
       child: Column(
         children: [
           const SizedBox(height: 10),
-          _buildWelcomeSection(), // Hoş Geldiniz Bölümü
-          const SizedBox(height: 40), // Hoş Geldiniz ile diğer bileşenler arasında boşluk
+          _buildWelcomeSection(),
+          // Hoş Geldiniz Bölümü
+          const SizedBox(height: 40),
+          // Hoş Geldiniz ile diğer bileşenler arasında boşluk
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -124,51 +152,16 @@ class AdminHomePage extends StatelessWidget {
                   Navigator.pushNamed(context, '/file_management');
                 }),
                 const SizedBox(height: 20), // Butonlar arasında boşluk
-                _buildActionButton(context, 'Müşteri Yönetimi', Icons.group, () {
+                _buildActionButton(context, 'Müşteri Yönetimi', Icons.group,
+                    () {
                   Navigator.pushNamed(context, '/customer_management');
                 }),
               ],
             ),
           ),
-          const SizedBox(height: 20), // Çıkış Yap ile diğer bileşenler arasında boşluk
-          _buildLogoutButton(context), // Çıkış Yap Butonu
+          _buildLogoutButton(context)
         ],
       ),
-    );
-  }
-
-  // Bottom Navigation Bar Metodu
-  Widget _buildBottomNavBar(BuildContext context) {
-    return BottomAppBar(
-      color: const Color(0xFFF1F1F1),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildNavIcon(
-            icon: Icons.home,
-            onPressed: () => Navigator.pushNamed(context, '/admin_home'),
-          ),
-          _buildNavIcon(
-            icon: Icons.folder,
-            onPressed: () {
-              // admin için düzenlenecek
-            },
-          ),
-          _buildNavIcon(
-            icon: Icons.group,
-            onPressed: () {
-              // admin için düzenlencek burası önemli beke
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNavIcon({required IconData icon, required VoidCallback onPressed}) {
-    return IconButton(
-      icon: Icon(icon, color: const Color(0xFF303030), size: 30),
-      onPressed: onPressed,
     );
   }
 }

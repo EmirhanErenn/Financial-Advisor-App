@@ -16,7 +16,7 @@ class AuthService {
     }
   }
 
-  //SIGNUP
+  //SIGNUP (ADMIN KULLANICI EKLEME ISLEMI)
   Future<String?> signUp(String email, String password) async {
     String? res;
     try {
@@ -46,6 +46,9 @@ class AuthService {
           break;
         case "invalid-email":
           res = "Email formatınız yanlış lütfen kontrol ediniz!";
+          break;
+        case "network-request-failed":
+          res = "Lütfen internet bağlantınızı kontrol ediniz!";
           break;
         default:
           res = 'Hata kodu: ${e.code}';
@@ -86,6 +89,9 @@ class AuthService {
               break;
             case "invalid-email":
               res = "Email formatınız yanlış lütfen kontrol ediniz!";
+              break;
+            case "network-request-failed":
+              res = "Lütfen internet bağlantınızı kontrol ediniz!";
               break;
             default:
               res = 'Hata kodu: ${e.code}';

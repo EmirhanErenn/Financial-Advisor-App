@@ -50,7 +50,7 @@ class _Login_PageState extends State<Login_Page> {
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  '© 2024 Badi Powered By Bekersoftware',
+                  '© 2024 Powered By Bekersoftware',
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey,

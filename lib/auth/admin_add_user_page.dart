@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:financial_advisor_app/service/auth_service.dart';
+import 'package:financial_advisor_app/widgets/SidebarWidget_Admin.dart';
 
-//update
 class Admin_User_Add_Page extends StatefulWidget {
   const Admin_User_Add_Page({Key? key}) : super(key: key);
 
@@ -14,23 +14,31 @@ class _Admin_User_Add_PageState extends State<Admin_User_Add_Page> {
   late String email, password;
   final formKey = GlobalKey<FormState>();
   final firebaseAuth = FirebaseAuth.instance;
-  final authService = AuthService(); // AUTH SERVICE SAYFASINDAN GELEN CLASS!!
+  final authService = AuthService();
+
+  bool isSidebarOpen = false; // Sidebar'ın açık olup olmadığını kontrol eden değişken
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset:
-          true, // Klavye açıldığında ekranı otomatik olarak küçültür
+      resizeToAvoidBottomInset: true,
       appBar: buildAppBar(),
-      body: SingleChildScrollView(
-        // Sayfanın kaydırılabilir olmasını sağlar
-        child: buildBody(context),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: buildBody(context),
+          ),
+          SidebarWidget(isOpen: isSidebarOpen, onClose: toggleSidebar)
+        ],
       ),
-      bottomNavigationBar: _buildBottomNavBar(context),
+      floatingActionButton: FloatingActionButton(
+        onPressed: toggleSidebar,
+        backgroundColor: const Color(0xFF003366),
+        child: const Icon(Icons.menu, color: Colors.white),
+      ),
     );
   }
 
-  // AppBar Metodu
   AppBar buildAppBar() {
     return AppBar(
       backgroundColor: const Color(0xFF003366),
@@ -58,7 +66,13 @@ class _Admin_User_Add_PageState extends State<Admin_User_Add_Page> {
     );
   }
 
-  // Body Metodu
+  void toggleSidebar() {
+    setState(() {
+      isSidebarOpen = !isSidebarOpen;
+    });
+  }
+
+
   Widget buildBody(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -76,7 +90,6 @@ class _Admin_User_Add_PageState extends State<Admin_User_Add_Page> {
                 passwordTextField(),
                 const SizedBox(height: 15),
                 buildElevatedButton(context),
-                //diger bilgiler daha sonra alınacak
               ],
             ),
           ),
@@ -85,7 +98,6 @@ class _Admin_User_Add_PageState extends State<Admin_User_Add_Page> {
     );
   }
 
-  // Başlık Metodu
   Widget buildTitleText() {
     return const Text(
       'Kayıt Olma Ekranı',
@@ -108,7 +120,7 @@ class _Admin_User_Add_PageState extends State<Admin_User_Add_Page> {
         password = value!;
       },
       obscureText: true,
-      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+      style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
       decoration: InputDecoration(
         hintText: "Şifreniz",
         filled: true,
@@ -131,7 +143,7 @@ class _Admin_User_Add_PageState extends State<Admin_User_Add_Page> {
       onSaved: (value) {
         email = value!;
       },
-      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+      style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
       decoration: InputDecoration(
         hintText: "E Posta Adresiniz",
         filled: true,
@@ -144,7 +156,6 @@ class _Admin_User_Add_PageState extends State<Admin_User_Add_Page> {
     );
   }
 
-  // Button Metodu
   Widget buildElevatedButton(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
@@ -162,11 +173,10 @@ class _Admin_User_Add_PageState extends State<Admin_User_Add_Page> {
                 builder: (context) {
                   return AlertDialog(
                     title: const Text('Hata'),
-                    content: Text(result!), // HATA KONTROLLERI AYARLANACAK
+                    content: Text(result!),
                     actions: [
                       TextButton(
-                        onPressed: () => Navigator.pop(
-                            context), // navigator pop mevcut ekrandan bir önceki ekrana geri dönmek icin kullanılır
+                        onPressed: () => Navigator.pop(context),
                         child: const Text('Geri Dön'),
                       ),
                     ],
@@ -189,42 +199,6 @@ class _Admin_User_Add_PageState extends State<Admin_User_Add_Page> {
           fontSize: 18,
         ),
       ),
-    );
-  }
-
-  Widget _buildBottomNavBar(BuildContext context) {
-    return BottomAppBar(
-      color: const Color(0xFFF1F1F1),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildNavIcon(
-            icon: Icons.home,
-            onPressed: () => Navigator.pushNamed(context, '/admin_home'),
-          ),
-          _buildNavIcon(
-            icon: Icons.payment,
-            onPressed: () {
-              // admin için düzenlenecek
-            },
-          ),
-          _buildNavIcon(
-            icon: Icons.person,
-            onPressed: () {
-              // admin için düzenlenecek
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Bottom Navigation Bar Icon
-  Widget _buildNavIcon(
-      {required IconData icon, required VoidCallback onPressed}) {
-    return IconButton(
-      icon: Icon(icon, color: const Color(0xFF303030), size: 30),
-      onPressed: onPressed,
     );
   }
 }

@@ -1,14 +1,31 @@
+import 'package:financial_advisor_app/widgets/SidebarWidget_User.dart';
 import 'package:flutter/material.dart';
 
-class UserHomePage extends StatelessWidget {
+class UserHomePage extends StatefulWidget {
   const UserHomePage({Key? key}) : super(key: key);
+
+  @override
+  State<UserHomePage> createState() => _UserHomePageState();
+}
+
+class _UserHomePageState extends State<UserHomePage> {
+  bool isSidebarOpen = false; // Sidebar'ın açık olup olmadığını kontrol eden değişken
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      body: _buildBody(context),
-      bottomNavigationBar: _buildBottomNavigationBar(context),
+      body: Stack(
+        children: [
+          _buildBody(context),
+          SidebarWidget(isOpen: isSidebarOpen, onClose: toggleSideBar),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: toggleSideBar,
+        backgroundColor: const Color(0xFF003366),
+        child: const Icon(Icons.menu, color: Colors.white),
+      ),
     );
   }
 
@@ -40,13 +57,20 @@ class UserHomePage extends StatelessWidget {
     );
   }
 
+  void toggleSideBar() {
+    setState(() {
+      isSidebarOpen = !isSidebarOpen;
+    });
+  }
+
   // Body Metodu
   Widget _buildBody(BuildContext context) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center, //ortalamak için unutma bunları Column a ekleyceksin (kendime not)
+          mainAxisAlignment: MainAxisAlignment
+              .center, //ortalamak için unutma bunları Column a ekleyceksin (kendime not)
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _buildWelcomeSection(),
@@ -55,9 +79,10 @@ class UserHomePage extends StatelessWidget {
               context,
               'Dosya Görüntüle',
               Icons.folder_open,
-                  () {
+              () {
                 // Dosya görüntüleme işlemi
-                Navigator.pushNamed(context, '/file_viewer'); //YAPILACAK DAHA YAPILMADI
+                Navigator.pushNamed(
+                    context, '/file_viewer'); //YAPILACAK DAHA YAPILMADI
               },
               isBold: true, //kalın yapar yazıyı bu da
             ),
@@ -73,7 +98,8 @@ class UserHomePage extends StatelessWidget {
   Widget _buildLogoutButton(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        Navigator.pushNamed(context, '/'); // Çıkış sonrası login sayfasına yönlendirme
+        Navigator.pushNamed(
+            context, '/'); // Çıkış sonrası login sayfasına yönlendirme
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.red,
@@ -126,46 +152,13 @@ class UserHomePage extends StatelessWidget {
     );
   }
 
-  // BottomNavigationBar Metodu
-  Widget _buildBottomNavigationBar(BuildContext context) {
-    return BottomAppBar(
-      color: const Color(0xFFF1F1F1),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildBottomIcon(
-            icon: Icons.home,
-            onPressed: () => Navigator.pushNamed(context, '/user_home'),
-          ),
-          _buildBottomIcon(
-            icon: Icons.payment,
-            onPressed: () => Navigator.pushNamed(context, '/user_payment'),
-          ),
-          _buildBottomIcon(
-            icon: Icons.person,
-            onPressed: () => Navigator.pushNamed(context, '/user_profile'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // IconButton Metodu
-  Widget _buildBottomIcon({required IconData icon, required VoidCallback onPressed}) {
-    return IconButton(
-      icon: Icon(icon, color: const Color(0xFF303030), size: 30),
-      onPressed: onPressed,
-    );
-  }
-
-  // Genel Amaçlı Buton Metodu Admin Sayfasındakiyle Aybnı
   Widget _buildActionButton(
-      BuildContext context,
-      String label,
-      IconData icon,
-      VoidCallback onPressed, {
-        bool isBold = false,
-      }) {
+    BuildContext context,
+    String label,
+    IconData icon,
+    VoidCallback onPressed, {
+    bool isBold = false,
+  }) {
     return ElevatedButton.icon(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(

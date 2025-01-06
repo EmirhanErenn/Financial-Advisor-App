@@ -1,10 +1,17 @@
+import 'package:financial_advisor_app/widgets/SidebarWidget_User.dart';
 import 'package:flutter/material.dart';
 //update
 
-class UserPaymentPage extends StatelessWidget {
+class UserPaymentPage extends StatefulWidget {
   const UserPaymentPage({Key? key}) : super(key: key);
 
-  // Sayfa içeriğini döndüren metot
+  @override
+  State<UserPaymentPage> createState() => _UserPaymentPageState();
+}
+
+class _UserPaymentPageState extends State<UserPaymentPage> {
+  bool isSidebarOpen = false;
+
   Widget buildPageContent(BuildContext context) {
     return Center(
       child: Column(
@@ -36,34 +43,10 @@ class UserPaymentPage extends StatelessWidget {
     );
   }
 
-  // BottomAppBar'ı döndüren metot
-  Widget buildBottomNavigationBar(BuildContext context) {
-    return BottomAppBar(
-      color: const Color(0xFFF1F1F1),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          IconButton(
-            icon: const Icon(Icons.home, color: Color(0xFF303030), size: 30),
-            onPressed: () {
-              Navigator.pushNamed(context, '/user_home');
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.payment, color: Color(0xFF303030), size: 30),
-            onPressed: () {
-              Navigator.pushNamed(context, '/user_payment');
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.person, color: Color(0xFF303030), size: 30),
-            onPressed: () {
-              Navigator.pushNamed(context, '/user_profile');
-            },
-          ),
-        ],
-      ),
-    );
+  void toggleSidebar() {
+    setState(() {
+      isSidebarOpen = !isSidebarOpen;
+    });
   }
 
   @override
@@ -97,8 +80,12 @@ class UserPaymentPage extends StatelessWidget {
         ),
         toolbarHeight: 60,
       ),
-      body: buildPageContent(context), // Metodun çağrılması
-      bottomNavigationBar: buildBottomNavigationBar(context), // BottomAppBar metodu
+      body: Stack(
+        children: [
+          buildPageContent(context),
+          SidebarWidget(isOpen: isSidebarOpen, onClose: toggleSidebar)
+        ],
+      ) // Metodun çağrılması
     );
   }
 }
